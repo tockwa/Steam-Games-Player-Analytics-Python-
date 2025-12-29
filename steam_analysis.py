@@ -2,8 +2,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# PEAK PLAYERS EACH YEARS
-
 df = pd.read_csv('Valve_Player_Data.csv')
 df['Date'] = pd.to_datetime(df['Date'], format='%Y-%m-%d')
 
@@ -20,8 +18,6 @@ plt.ylabel('Years')
 plt.tight_layout()
 plt.grid(axis='x')
 plt.show()
-
-# AVERAGE PLAYERS EACH YEARS
 
 avg_players_each_years = (
     df.groupby(df['Date'].dt.to_period('Y'))['Avg_players']
@@ -90,4 +86,5 @@ top_games = (
 )
 
 print('Average playersin the best season of the year')
+
 print(top_games)
