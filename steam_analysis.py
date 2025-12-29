@@ -39,23 +39,6 @@ plt.show()
 
 df_sorted = df.sort_values(['Game_Name', 'Date'])
 
-players_change = (
-    df_sorted
-    .groupby('Game_Name')['Avg_players']
-    .diff()
-)
-
-
-top_game_year = (
-    df.groupby([df['Date'].dt.year, 'Game_Name'])['Avg_players']
-    .mean()
-    .reset_index()
-    .sort_values('Avg_players', ascending=False) ## ---
-    .head(10)
-)
-
-#print(top_game_year)
-
 top_game_alltime = (
     df.groupby(['Game_Name'])['Avg_players']
     .max()
@@ -63,10 +46,10 @@ top_game_alltime = (
     .head(10)
 )
 
+print('Top 10 games of all time')
 print(top_game_alltime)
 
 print()
-# cезон
 
 def get_season(months):
     if months in [12, 1, 2]:
@@ -85,7 +68,6 @@ df['Year'] = df['Date'].dt.year
 top_game_season = (
     df.groupby(['Year','Season'])['Avg_players']
     .mean()
-    .sort_values(ascending=False)
     .reset_index()
 )
 
@@ -93,4 +75,19 @@ top_season_each_year = (
     top_game_season
     .loc[top_game_season.groupby('Year')['Avg_players'].idxmax()]
 )
-print(top_game_season)
+
+top_games = (
+    df
+    .merge(top_season_each_year[['Year', 'Season']], on=['Year', 'Season'])
+    .groupby(['Year', 'Season', 'Game_Name'])['Avg_players']
+    .mean()
+    .reset_index()
+)
+
+top_games = (
+    top_games
+    .loc[top_games.groupby(['Year', 'Season'])['Avg_players'].idxmax()]
+)
+
+print('Average playersin the best season of the year')
+print(top_games)
